@@ -22,7 +22,10 @@ def main ():
         dt = (clock.tick(60)/1000)
 
         ## prints player ##
+        ## update players rotation ##
         player.draw(screen)
+        player.update(dt)
+
 
         ## update the display ##
         pygame.display.flip()
