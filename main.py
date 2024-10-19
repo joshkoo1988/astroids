@@ -13,6 +13,9 @@ def main ():
     while True:
         screen.fill(black_color)
         pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
 
     print ("Starting asteroids!")
     print (f"Screen width: {SCREEN_WIDTH}")
