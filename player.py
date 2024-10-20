@@ -8,6 +8,8 @@ class Player(CircleShape):
         super().__init__(x,y,PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.player_lives = PLAYER_LIVES
+        self.invincible_timer = 0
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -25,6 +27,7 @@ class Player(CircleShape):
 
     def update(self, dt):
         self.shoot_timer -= dt
+        self.invincible_timer -= dt
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -41,6 +44,17 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+        if self.position.x > SCREEN_WIDTH:
+            self.position.x = 0
+        elif self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+    
+    # Wrap around the screen vertically
+        if self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0
+        elif self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
+
 
     def shoot(self):
         if self.shoot_timer >0:
@@ -48,3 +62,14 @@ class Player(CircleShape):
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN
         shot = Shot(self.position.x,self.position.y)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+
+    def collissions(self,second):   
+        distance = pygame.math.Vector2.distance_to(self.position,second.position)
+        if self.radius + second.radius >= distance and self.player_lives <= 0:
+            return True
+        elif self.radius + second.radius >= distance and self.player_lives > 0 and self.invincible_timer <= 0:
+            self.player_lives -= 1
+            self.invincible_timer = INVINCIBILITY_DURATION
+            if self.player_lives >= 1:    
+                print(f"You have {self.player_lives} life left")
+        return False
