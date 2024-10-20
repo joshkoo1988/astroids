@@ -13,7 +13,13 @@ def main ():
     dt = 0
     player = Player(SCREEN_WIDTH/2,SCREEN_HEIGHT/2)
 
-
+    ## group to handle obj that can be updated ##
+    ## group to handle obj that can be drawn ##
+    ## add a player to both groups ##
+    updateable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updateable, drawable)
+    
     ##create an infinate game loop for the game screen ##
     ## set fps at 60 ##
     running = True
@@ -23,9 +29,10 @@ def main ():
 
         ## prints player ##
         ## update players rotation ##
-        player.draw(screen)
-        player.update(dt)
-
+        for player in updateable:
+            player.update(dt)
+        drawable.draw(screen)
+        
 
         ## update the display ##
         pygame.display.flip()
