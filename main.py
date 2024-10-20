@@ -63,6 +63,12 @@ def main ():
                 print ("Game over!")
                 running = False
 
+        for asteroid in asteroids:
+            for shot in shots:
+                if shot.collissions(asteroid):
+                    pygame.sprite.Sprite.kill(asteroid)
+
+
         dt = clock.tick(60) / 1000
 
 
